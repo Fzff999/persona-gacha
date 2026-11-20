@@ -849,6 +849,36 @@ main {
 .hr { height: 1px; background: rgba(34, 28, 20, 0.1); margin: 18px 0; }
 .modal .tiny { color: #8a7a5f; }
 
+/* 收款码 */
+.pay { text-align: center; margin-top: 6px; }
+.pay__qr {
+  display: block;
+  width: min(230px, 62vw);
+  margin: 0 auto 4px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.4);
+  -webkit-touch-callout: default;
+}
+.pay__hint { margin: 10px 0 14px; font-size: 12.5px; line-height: 1.7; color: #5c4d38; }
+.pay__hint b { color: var(--orange); font-size: 15px; }
+
+/* 卡密展示 */
+.codebox { display: flex; gap: 8px; align-items: center; margin: 14px 0 4px; }
+.codebox code {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #221c14;
+  color: #f6efe2;
+  font-family: ui-monospace, Consolas, "Courier New", monospace;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+.codebox .btn { min-height: 44px; padding: 0 18px; font-size: 13px; border-radius: 10px; }
+
 /* 深度解读 */
 .report { color: #2b2318; }
 .report h3 { margin-bottom: 4px; }

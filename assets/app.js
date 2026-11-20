@@ -16,7 +16,10 @@
     // 收款 / 商品页链接（面包多、爱发电、闲鱼、微店都可以）。留空则只显示卡密输入。
     payUrl: "",
     // 可用的卡密（正式运营时改成你自己发出的一批码）
-    codes: ["GACHA-2026", "COU-2026", "DEEP-9.9", "FZF-9527"],
+    codes: [
+      "GACHA-2026", "GACHA-7K2M", "GACHA-9Q4X", "GACHA-3F8N", "GACHA-5T1R",
+      "GACHA-8W6B", "GACHA-2H9D", "GACHA-6J4V", "GACHA-4C7P", "GACHA-1L5S"
+    ],
     // 可选：接一个大模型接口来改写文案。留空则用内置文案引擎。
     aiEndpoint: ""
   };
@@ -552,15 +555,19 @@
     } else fallbackCopy(full);
   }
 
-  function fallbackCopy(text) {
+  function fallbackCopy(text, okMsg, failMsg) {
     var ta = document.createElement("textarea");
     ta.value = text;
     ta.style.position = "fixed";
     ta.style.opacity = "0";
     document.body.appendChild(ta);
     ta.select();
-    try { document.execCommand("copy"); toast("分享文案已复制"); }
-    catch (e) { toast("复制失败，请手动复制链接"); }
+    try {
+      document.execCommand("copy");
+      toast(okMsg || "分享文案已复制");
+    } catch (e) {
+      toast(failMsg || "复制失败，请手动复制链接");
+    }
     document.body.removeChild(ta);
   }
 
@@ -583,22 +590,55 @@
     var html = '' +
       '<h3>解锁「' + t.nick + '」的深度解读</h3>' +
       '<p>卡片告诉你“是谁”，深度解读告诉你“为什么会这样、可以怎么办”。约 900 字，4 段：底层程序、压力下的样子、关系里的误会、一个可以试的小动作。</p>' +
-      '<div class="price-line"><strong>¥9.9</strong><span>一次解锁，永久可看</span></div>' +
-      (CONFIG.payUrl
-        ? '<a class="btn btn--primary" style="width:100%" href="' + CONFIG.payUrl + '" target="_blank" rel="noopener">去付款，拿到卡密</a>'
-        : '<p class="tiny">付款方式：扫描发起人给你的收款码，或直接找发起人要一张卡密。</p>') +
+      '<div class="pay">' +
+        '<img class="pay__qr" src="assets/pay.png" alt="微信收款码，金额 9.9 元" />' +
+        '<p class="pay__hint">微信扫码支付 <b>¥9.9</b><br />付完点下面的按钮，卡密自动发给你</p>' +
+        '<button class="btn btn--primary" id="btn-paid" type="button" style="width:100%">我已付款，获取卡密</button>' +
+      '</div>' +
       '<div class="hr"></div>' +
       '<p style="margin-bottom:6px"><b>已有卡密？</b></p>' +
-      '<div class="field"><input id="code-input" type="text" placeholder="输入卡密，例如 GACHA-2026" autocomplete="off" /><button class="btn btn--primary" id="code-go" type="button">解锁</button></div>' +
-      '<p class="tiny">卡密不区分大小写。演示卡密：GACHA-2026</p>' +
+      '<div class="field"><input id="code-input" type="text" placeholder="输入卡密" autocomplete="off" /><button class="btn btn--primary" id="code-go" type="button">解锁</button></div>' +
+      '<p class="tiny">卡密不区分大小写；一次解锁，永久可看。</p>' +
       '<div class="hr"></div>' +
-      '<p class="tiny">深度解读是内容产品，不是心理诊断；卡密一经使用不支持退款。</p>';
+      '<p class="tiny">深度解读是内容产品，不是心理诊断。长按收款码可以保存或识别。</p>';
     openModal(html);
+    $("#btn-paid").addEventListener("click", paidUnlock);
     $("#code-go").addEventListener("click", tryCode);
     $("#code-input").addEventListener("keydown", function (e) {
       if (e.key === "Enter") tryCode();
     });
-    setTimeout(function () { var i = $("#code-input"); if (i) i.focus(); }, 60);
+  }
+
+  function paidUnlock() {
+    var r = state.result;
+    if (!r) return;
+    if (state.unlocked) return openReport();
+    var code = CONFIG.codes[Math.floor(Math.random() * CONFIG.codes.length)];
+    state.unlocked = true;
+    store("gacha_unlocked", "1");
+    var L = loadLog();
+    var i = logFind(L, r.rid);
+    if (i >= 0) { L[i].u = 1; saveLog(L); }
+    $("#btn-unlock").innerHTML = '查看深度解读 <span class="price">已解锁</span>';
+    $("#modal-body").innerHTML =
+      '<h3>已解锁</h3>' +
+      '<p>这是你的卡密，已经记在这台设备上；换手机或换浏览器时输入它，还能再看。</p>' +
+      '<div class="codebox"><code>' + code + '</code><button class="btn btn--outline" id="btn-copy-code" type="button">复制</button></div>' +
+      '<button class="btn btn--primary" id="btn-open-report" type="button" style="width:100%;margin-top:12px">看深度解读 →</button>' +
+      '<p class="tiny" style="margin-top:10px">谢谢支持。如果刚才是在替朋友抽，把卡面和这张卡密一起发给他。</p>';
+    $("#btn-copy-code").addEventListener("click", function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(function () {
+          toast("卡密已复制");
+        }, function () {
+          fallbackCopy(code, "卡密已复制", "复制失败，请长按选择");
+        });
+      } else {
+        fallbackCopy(code, "卡密已复制", "复制失败，请长按选择");
+      }
+    });
+    $("#btn-open-report").addEventListener("click", openReport);
+    toast("已解锁，谢谢支持");
   }
 
   function tryCode() {
