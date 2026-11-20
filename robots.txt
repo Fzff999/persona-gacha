@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://fzff999.github.io/persona-gacha/sitemap.xml

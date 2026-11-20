@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0E131C" />
+<title>9 型图鉴 · 人格抽卡机</title>
+<meta name="description" content="九型人格的 9 张卡面：校准师、补给站、推进器、深海观测员、资料库、预警雷达、烟花发射器、承重墙、恒温器。看看每一型的超能力、雷区和搭子画像。" />
+<meta name="keywords" content="九型人格,9 型,人格卡,人格图鉴,性格测试" />
+<link rel="canonical" href="https://fzff999.github.io/persona-gacha/types.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="人格抽卡机" />
+<meta property="og:url" content="https://fzff999.github.io/persona-gacha/types.html" />
+<meta property="og:title" content="9 型图鉴 · 人格抽卡机" />
+<meta property="og:description" content="9 张卡，9 种活法。看看每一型的超能力、雷区和搭子画像。" />
+<meta property="og:image" content="https://fzff999.github.io/persona-gacha/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://fzff999.github.io/persona-gacha/og.png" />
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="stylesheet" href="assets/style.css" />
+<style>
+  .gallery { position: relative; z-index: 2; max-width: 1180px; margin: 0 auto; padding: 40px 24px 20px; }
+  .gallery .display { font-size: clamp(40px, 5.4vw, 66px); margin-bottom: 18px; }
+  .gallery .lede { max-width: 34em; margin-bottom: 34px; }
+  .tgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .tcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 20px 20px;
+    border-radius: 18px;
+    background:
+      repeating-linear-gradient(135deg, rgba(120, 100, 70, 0.03) 0 1px, transparent 1px 8px),
+      linear-gradient(158deg, #fdf8ef 0%, #f4ead9 100%);
+    color: #221c14;
+    border-top: 3px solid var(--tc);
+    box-shadow: 0 24px 50px -34px rgba(0, 0, 0, 0.9);
+    overflow: hidden;
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .tcard::after {
+    content: attr(data-no);
+    position: absolute;
+    right: -8px;
+    bottom: -30px;
+    font-family: var(--font-serif);
+    font-size: 120px;
+    line-height: 1;
+    color: var(--tc);
+    opacity: 0.07;
+    pointer-events: none;
+  }
+  .tcard:hover { transform: translateY(-5px); box-shadow: 0 34px 60px -34px rgba(0, 0, 0, 1); }
+  .tcard__top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: #8a7a5f;
+    margin-bottom: 14px;
+  }
+  .tcard h2 {
+    margin: 0 0 8px;
+    font-family: var(--font-serif);
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+  }
+  .tcard__tag {
+    margin: 0 0 16px;
+    padding-left: 10px;
+    border-left: 2px solid var(--tc);
+    font-family: var(--font-serif);
+    font-size: 13px;
+    line-height: 1.7;
+    color: #5a4a35;
+  }
+  .tcard dl { margin: 0 0 16px; display: grid; gap: 8px; }
+  .tcard dl div { display: grid; grid-template-columns: 54px 1fr; gap: 8px; }
+  .tcard dt { font-size: 9px; letter-spacing: 0.12em; color: #93815f; padding-top: 3px; }
+  .tcard dd { margin: 0; font-size: 12.5px; line-height: 1.55; color: #2c2418; }
+  .tcard__go {
+    margin-top: auto;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--tc);
+    text-decoration: none;
+  }
+  .tcard__go:hover { text-decoration: underline; }
+  .gallery__foot { margin: 38px 0 0; font-size: 12.5px; color: var(--muted); }
+  .gallery__foot a { color: var(--amber); }
+  @media (max-width: 980px) { .tgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) {
+    .gallery { padding: 24px 18px 10px; }
+    .tgrid { grid-template-columns: 1fr; }
+    .tcard h2 { font-size: 24px; }
+  }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"九型人格卡 · 9 型图鉴","itemListElement":[{"@type":"ListItem","position":1,"name":"01 校准师 · 完美型","url":"https://fzff999.github.io/persona-gacha/index.html?t=1"},{"@type":"ListItem","position":2,"name":"02 补给站 · 助人型","url":"https://fzff999.github.io/persona-gacha/index.html?t=2"},{"@type":"ListItem","position":3,"name":"03 推进器 · 成就型","url":"https://fzff999.github.io/persona-gacha/index.html?t=3"},{"@type":"ListItem","position":4,"name":"04 深海观测员 · 自我型","url":"https://fzff999.github.io/persona-gacha/index.html?t=4"},{"@type":"ListItem","position":5,"name":"05 资料库 · 理智型","url":"https://fzff999.github.io/persona-gacha/index.html?t=5"},{"@type":"ListItem","position":6,"name":"06 预警雷达 · 忠诚型","url":"https://fzff999.github.io/persona-gacha/index.html?t=6"},{"@type":"ListItem","position":7,"name":"07 烟花发射器 · 活跃型","url":"https://fzff999.github.io/persona-gacha/index.html?t=7"},{"@type":"ListItem","position":8,"name":"08 承重墙 · 领袖型","url":"https://fzff999.github.io/persona-gacha/index.html?t=8"},{"@type":"ListItem","position":9,"name":"09 恒温器 · 和平型","url":"https://fzff999.github.io/persona-gacha/index.html?t=9"}]}
+</script>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <div class="bg__glow"></div>
+  <div class="bg__grain"></div>
+</div>
+
+<header class="top">
+  <a class="brand" href="./" aria-label="人格抽卡机 首页">
+    <span class="brand__mark" aria-hidden="true">抽</span>
+    <span class="brand__name">人格抽卡机</span>
+  </a>
+  <div class="top__right">
+    <a class="ghost" href="./">去抽一张</a>
+  </div>
+</header>
+
+<main class="gallery">
+  <p class="eyebrow">THE NINE CARDS ／ 9 型图鉴</p>
+  <h1 class="display">9 张卡<br /><em>9 种活法</em></h1>
+  <p class="lede">九型人格不是九个标签，是九种“为什么会这样”的解释。抽到的那张，只是你此刻最常用的那一种——不是全部的你。</p>
+
+  <div class="tgrid">
+      <article class="tcard" id="t1" style="--tc:#C0503C" data-no="01">
+        <div class="tcard__top"><span>NO.01</span><span>完美型</span></div>
+        <h2>校准师</h2>
+        <p class="tcard__tag">“你不是挑剔，你只是看见了那个 0.5 毫米的偏差。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>一眼看见哪里不对 · 说到做到的执行力</dd></div>
+          <div><dt>今日雷区</dt><dd>被说“差不多就行” · 犯错被当场点破</dd></div>
+          <div><dt>搭子画像</dt><dd>7 号（帮你松一口气）｜2 号（接住你的自责）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=1">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t2" style="--tc:#C4694A" data-no="02">
+        <div class="tcard__top"><span>NO.02</span><span>助人型</span></div>
+        <h2>补给站</h2>
+        <p class="tcard__tag">“你一直在给别人递水，今天想有人问你渴不渴。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>读到别人没说出口的需要 · 让人瞬间放松</dd></div>
+          <div><dt>今日雷区</dt><dd>付出被当成理所当然 · 被说“你别管了”</dd></div>
+          <div><dt>搭子画像</dt><dd>8 号（替你撑腰）｜5 号（不消耗你）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=2">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t3" style="--tc:#B08A2E" data-no="03">
+        <div class="tcard__top"><span>NO.03</span><span>成就型</span></div>
+        <h2>推进器</h2>
+        <p class="tcard__tag">“我擅长赢，但最近在学怎么输得体面。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>把目标拆成路径 · 临场永远能打</dd></div>
+          <div><dt>今日雷区</dt><dd>被说“你只是运气好” · 无意义的社交</dd></div>
+          <div><dt>搭子画像</dt><dd>9 号（让你慢下来）｜6 号（帮你兜底）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=3">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t4" style="--tc:#6C5FA0" data-no="04">
+        <div class="tcard__top"><span>NO.04</span><span>自我型</span></div>
+        <h2>深海观测员</h2>
+        <p class="tcard__tag">“我不是难懂，我只是还没遇到愿意慢一点的人。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>审美直觉 · 很深的共情</dd></div>
+          <div><dt>今日雷区</dt><dd>被说“你想太多” · 被拿去和别人比较</dd></div>
+          <div><dt>搭子画像</dt><dd>5 号（不评判）｜9 号（稳定，不追问）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=4">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t5" style="--tc:#4E7585" data-no="05">
+        <div class="tcard__top"><span>NO.05</span><span>理智型</span></div>
+        <h2>资料库</h2>
+        <p class="tcard__tag">“我不是冷漠，我是在后台加载。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>看透事情的结构 · 情绪稳定</dd></div>
+          <div><dt>今日雷区</dt><dd>被突然打断 · 被索取情绪</dd></div>
+          <div><dt>搭子画像</dt><dd>2 号（给温度）｜8 号（替你出面）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=5">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t6" style="--tc:#55738F" data-no="06">
+        <div class="tcard__top"><span>NO.06</span><span>忠诚型</span></div>
+        <h2>预警雷达</h2>
+        <p class="tcard__tag">“我不是想太多，我是在替大家想。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>提前看见风险 · 忠诚到最后一刻</dd></div>
+          <div><dt>今日雷区</dt><dd>临时改计划 · 信息不透明</dd></div>
+          <div><dt>搭子画像</dt><dd>3 号（带你往前）｜9 号（稳住你）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=6">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t7" style="--tc:#C97F2E" data-no="07">
+        <div class="tcard__top"><span>NO.07</span><span>活跃型</span></div>
+        <h2>烟花发射器</h2>
+        <p class="tcard__tag">“我同时开了 7 个窗口，其中 6 个在放烟花。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>点子密度极高 · 三秒拉满气氛</dd></div>
+          <div><dt>今日雷区</dt><dd>被限制自由 · 重复且无聊</dd></div>
+          <div><dt>搭子画像</dt><dd>1 号（帮你收尾）｜4 号（陪你深一点）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=7">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t8" style="--tc:#9E3E3E" data-no="08">
+        <div class="tcard__top"><span>NO.08</span><span>领袖型</span></div>
+        <h2>承重墙</h2>
+        <p class="tcard__tag">“我可以扛，但我也想有人问我累不累。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>关键时刻的决断 · 护住身边的人</dd></div>
+          <div><dt>今日雷区</dt><dd>被当众挑战 · 被人控制</dd></div>
+          <div><dt>搭子画像</dt><dd>2 号（软化你）｜5 号（给你方案）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=8">抽到这张 →</a>
+      </article>
+      <article class="tcard" id="t9" style="--tc:#667F51" data-no="09">
+        <div class="tcard__top"><span>NO.09</span><span>和平型</span></div>
+        <h2>恒温器</h2>
+        <p class="tcard__tag">“我不是没意见，我只是把意见调成了静音。”</p>
+        <dl>
+          <div><dt>超能力</dt><dd>稳定全场 · 调和矛盾</dd></div>
+          <div><dt>今日雷区</dt><dd>被逼当场表态 · 冲突现场</dd></div>
+          <div><dt>搭子画像</dt><dd>3 号（推你一把）｜8 号（替你出头）</dd></div>
+        </dl>
+        <a class="tcard__go" href="index.html?t=9">抽到这张 →</a>
+      </article>
+  </div>
+
+  <p class="gallery__foot">没抽过？<a href="./">去抽一张 →</a>　·　结果只描述行为倾向，不构成心理诊断。</p>
+</main>
+
+<footer class="foot">
+  <p>人格抽卡机 · 成都大学商学院《客户体验旅程》课程实践</p>
+  <p class="tiny">9 型文案为行为倾向描述，用于自我观察，不是心理诊断工具。</p>
+</footer>
+</body>
+</html>
