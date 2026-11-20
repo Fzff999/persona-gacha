@@ -451,12 +451,12 @@
     });
 
     // 底部：二维码 + 说明
-    var qrSize = 148;
+    var qrSize = 190;
     var qrX = W - 84 - qrSize;
     var qrY = H - 84 - qrSize;
     if (qr) {
       ctx.fillStyle = "#ffffff";
-      roundRect(ctx, qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 12);
+      roundRect(ctx, qrX - 12, qrY - 12, qrSize + 24, qrSize + 24, 14);
       ctx.fill();
       ctx.drawImage(qr, qrX, qrY, qrSize, qrSize);
     }
