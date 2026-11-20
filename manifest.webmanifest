@@ -1,0 +1,26 @@
+{
+  "name": "人格抽卡机 · 抽一张只属于你的卡",
+  "short_name": "抽卡机",
+  "description": "3 道题、30 秒，抽一张只属于你的九型人格卡。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E131C",
+  "theme_color": "#0E131C",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
