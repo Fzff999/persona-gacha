@@ -67,6 +67,61 @@
   function saveLog(arr) {
     store("gacha_log", JSON.stringify(arr.slice(-500)));
   }
+  function logFind(L, rid) {
+    for (var i = L.length - 1; i >= 0; i--) {
+      if (L[i].rid === rid) return i;
+    }
+    return -1;
+  }
+
+  /* 答题进度：刷新/误关页面还能接着答 */
+  function saveProgress() {
+    store("gacha_progress", JSON.stringify({ a: state.answers, i: state.idx, ts: Date.now() }));
+  }
+  function loadProgress() {
+    try {
+      var p = JSON.parse(store("gacha_progress") || "null");
+      if (p && p.a && p.a.length) {
+        state.answers = p.a;
+        state.idx = p.i || 0;
+      }
+    } catch (e) {}
+  }
+  function clearProgress() {
+    store("gacha_progress", null);
+  }
+
+  /* 上次的结果：刷新结果页不会丢 */
+  function saveResult() {
+    if (!state.result) return;
+    try {
+      store("gacha_result", JSON.stringify({
+        id: state.result.id,
+        hidden: state.result.hidden,
+        seed: state.result.seed,
+        rid: state.result.rid
+      }));
+    } catch (e) {}
+  }
+  function loadResult() {
+    try {
+      var r = JSON.parse(store("gacha_result") || "null");
+      if (r && BY_ID[r.id]) {
+        state.result = {
+          id: r.id,
+          hidden: r.hidden || 5,
+          seed: r.seed || 0,
+          rid: r.rid,
+          logged: true,
+          score: {},
+          picks: []
+        };
+        var L = loadLog();
+        var i = logFind(L, r.rid);
+        state.rated = i >= 0 && typeof L[i].s === "number";
+      }
+    } catch (e) {}
+  }
 
   /* -------------------- 状态 -------------------- */
   var state = {
@@ -74,7 +129,6 @@
     idx: 0,
     result: null,
     unlocked: store("gacha_unlocked") === "1",
-    logIndex: -1,
     rated: false
   };
 
@@ -111,7 +165,8 @@
     state.result = null;
     state.locking = false;
     state.rated = false;
-    state.logIndex = -1;
+    clearProgress();
+    store("gacha_result", null);
     navigate("#/q1");
   }
 
@@ -144,6 +199,7 @@
         n.style.animation = "";
       });
     }
+    $("#btn-back").hidden = i === 0;
     show("quiz");
   }
 
@@ -151,7 +207,9 @@
     if (state.locking || btn.classList.contains("is-picked")) return;
     state.locking = true;
     btn.classList.add("is-picked");
+    state.answers = state.answers.slice(0, state.idx);
     state.answers[state.idx] = { primary: opt.primary, secondary: opt.secondary, label: opt.label };
+    saveProgress();
     var next = state.idx + 1;
     setTimeout(function () {
       state.locking = false;
@@ -200,9 +258,11 @@
       hidden: second,
       score: score,
       seed: seed,
+      rid: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       picks: state.answers.map(function (a) { return a ? a.primary : 0; })
     };
-    try { store("gacha_last", JSON.stringify(state.result)); } catch (e) {}
+    saveResult();
+    clearProgress();
   }
 
   /* -------------------- 结果页 -------------------- */
@@ -246,13 +306,14 @@
     var r = state.result;
     if (!r) return navigate("#/");
     var t = BY_ID[r.id];
+    if (!r.rid) r.rid = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     if (!r.logged) {
       var L = loadLog();
-      L.push({ t: r.id, s: null, u: 0, ts: Date.now() });
+      L.push({ rid: r.rid, t: r.id, s: null, u: 0, ts: Date.now() });
       saveLog(L);
-      state.logIndex = Math.min(L.length - 1, 499);
       state.rated = false;
       r.logged = true;
+      saveResult();
     }
     $("#card-wrap").innerHTML = cardHTML(t, r);
     $("#result-eyebrow").textContent = "YOU GOT ／ NO." + t.code;
@@ -269,10 +330,12 @@
   }
 
   function rate(v, btn) {
-    if (state.rated) return;
+    var r = state.result;
+    if (!r || state.rated) return;
     var L = loadLog();
-    if (L[state.logIndex]) {
-      L[state.logIndex].s = v;
+    var i = logFind(L, r.rid);
+    if (i >= 0) {
+      L[i].s = v;
       saveLog(L);
     }
     state.rated = true;
@@ -296,7 +359,7 @@
     return lines;
   }
 
-  function drawCard(canvas, t, r) {
+  function drawCard(canvas, t, r, qr) {
     var W = 1080, H = 1440;
     canvas.width = W; canvas.height = H;
     var ctx = canvas.getContext("2d");
@@ -387,20 +450,27 @@
       y += Math.max(1, lines.length) * 40 + 46;
     });
 
-    // 底栏
-    ctx.fillStyle = "rgba(34,28,20,0.06)";
-    roundRect(ctx, 84, H - 150, W - 168, 74, 14);
-    ctx.fill();
+    // 底部：二维码 + 说明
+    var qrSize = 148;
+    var qrX = W - 84 - qrSize;
+    var qrY = H - 84 - qrSize;
+    if (qr) {
+      ctx.fillStyle = "#ffffff";
+      roundRect(ctx, qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 12);
+      ctx.fill();
+      ctx.drawImage(qr, qrX, qrY, qrSize, qrSize);
+    }
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#8a7a5f";
+    ctx.font = "20px " + sans;
+    ctx.fillText("扫码再抽一张", 84, qrY + 4);
     ctx.fillStyle = "#6b5b42";
     ctx.font = "24px " + sans;
-    ctx.fillText("同款抽卡 · " + hostText(), 110, H - 103);
-
+    ctx.fillText(hostText(), 84, qrY + 46);
     ctx.fillStyle = "#a08e6f";
-    ctx.font = "20px " + sans;
-    ctx.textAlign = "left";
-    ctx.fillText("娱乐向轻测 · 非心理诊断", 84, H - 56);
-    ctx.textAlign = "right";
-    ctx.fillText("PERSONA GACHA", W - 84, H - 56);
+    ctx.font = "19px " + sans;
+    ctx.fillText("娱乐向轻测 · 非心理诊断", 84, qrY + 96);
+    ctx.fillText("PERSONA GACHA", 84, qrY + 128);
   }
 
   function letterText(ctx, text, x, y) {
@@ -416,17 +486,7 @@
     ctx.closePath();
   }
 
-  function saveImage() {
-    var r = state.result;
-    if (!r) return;
-    var t = BY_ID[r.id];
-    var canvas = document.createElement("canvas");
-    try {
-      drawCard(canvas, t, r);
-    } catch (e) {
-      toast("图片生成失败，请换个浏览器试试");
-      return;
-    }
+  function exportCanvas(canvas, t) {
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     canvas.toBlob(function (blob) {
       if (!blob) { toast("图片生成失败"); return; }
@@ -445,6 +505,30 @@
       setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
       toast("已保存到下载文件夹");
     }, "image/png");
+  }
+
+  function saveImage() {
+    var r = state.result;
+    if (!r) return;
+    var t = BY_ID[r.id];
+    var canvas = document.createElement("canvas");
+    var img = new Image();
+    var ready = false;
+    function finish() {
+      if (ready) return;
+      ready = true;
+      try {
+        drawCard(canvas, t, r, img.complete && img.naturalWidth ? img : null);
+      } catch (e) {
+        toast("图片生成失败，请换个浏览器试试");
+        return;
+      }
+      exportCanvas(canvas, t);
+    }
+    img.onload = finish;
+    img.onerror = finish;
+    img.src = "assets/qr.png";
+    setTimeout(finish, 1500);
   }
 
   /* -------------------- 分享 -------------------- */
@@ -527,8 +611,11 @@
     }
     state.unlocked = true;
     store("gacha_unlocked", "1");
-    var L = loadLog();
-    if (L[state.logIndex]) { L[state.logIndex].u = 1; saveLog(L); }
+    if (state.result) {
+      var L = loadLog();
+      var i = logFind(L, state.result.rid);
+      if (i >= 0) { L[i].u = 1; saveLog(L); }
+    }
     $("#btn-unlock").innerHTML = '查看深度解读 <span class="price">已解锁</span>';
     toast("解锁成功");
     openReport();
@@ -671,6 +758,9 @@
   $("#btn-start").addEventListener("click", startQuiz);
   $("#btn-retry").addEventListener("click", startQuiz);
   $("#btn-quit").addEventListener("click", function () { navigate("#/"); });
+  $("#btn-back").addEventListener("click", function () {
+    if (state.idx > 0) navigate("#/q" + state.idx);
+  });
   $("#btn-save").addEventListener("click", saveImage);
   $("#btn-share").addEventListener("click", share);
   $("#btn-unlock").addEventListener("click", openUnlock);
@@ -697,6 +787,8 @@
   window.addEventListener("hashchange", route);
 
   /* -------------------- 启动 -------------------- */
+  loadProgress();
+  loadResult();
   renderFriendNote();
   route();
 

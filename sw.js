@@ -4,7 +4,7 @@
    - 导航请求：网络优先（保证拿到最新页面），失败回退缓存
    - 静态资源：先用缓存立刻渲染，同时后台拉新版本（stale-while-revalidate）
 */
-var CACHE = "gacha-v2";
+var CACHE = "gacha-v3";
 var ASSETS = [
   "./",
   "./index.html",
@@ -13,6 +13,7 @@ var ASSETS = [
   "./assets/data.js",
   "./assets/icon.svg",
   "./assets/icon-192.png",
+  "./assets/qr.png",
   "./og.png",
   "./manifest.webmanifest"
 ];

@@ -393,7 +393,17 @@ main {
   padding: 56px 0 80px;
   min-height: calc(100vh - 220px);
 }
-.quiz__head { display: flex; align-items: center; gap: 18px; margin-bottom: 44px; }
+.quiz__head { display: flex; align-items: center; gap: 14px; margin-bottom: 44px; }
+.quiz__back {
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  color: var(--muted-2);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.quiz__back:hover { color: var(--cream); }
 .quiz__index {
   font-size: 12px;
   letter-spacing: 0.2em;
