@@ -8,6 +8,7 @@
   var DATA = window.GACHA_DATA;
   var TYPES = DATA.types;
   var QS = DATA.questions;
+  var FULL = DATA.full || DATA.questions;
   var BY_ID = {};
   TYPES.forEach(function (t) { BY_ID[t.id] = t; });
 
@@ -79,12 +80,18 @@
 
   /* 答题进度：刷新/误关页面还能接着答 */
   function saveProgress() {
-    store("gacha_progress", JSON.stringify({ a: state.answers, i: state.idx, ts: Date.now() }));
+    store("gacha_progress", JSON.stringify({
+      a: state.answers, i: state.idx, m: state.mode, ts: Date.now()
+    }));
   }
   function loadProgress() {
     try {
       var p = JSON.parse(store("gacha_progress") || "null");
       if (p && p.a && p.a.length) {
+        if (p.m === "full" || p.m === "quick") {
+          state.mode = p.m;
+          store("gacha_mode", p.m);
+        }
         state.answers = p.a;
         state.idx = p.i || 0;
       }
@@ -132,8 +139,13 @@
     idx: 0,
     result: null,
     unlocked: store("gacha_unlocked") === "1",
-    rated: false
+    rated: false,
+    mode: store("gacha_mode") === "full" ? "full" : "quick"
   };
+
+  function qset() {
+    return state.mode === "full" ? FULL : QS;
+  }
 
   /* -------------------- 视图切换 -------------------- */
   var SCREENS = ["home", "quiz", "reading", "result"];
@@ -162,7 +174,11 @@
   }
 
   /* -------------------- 答题 -------------------- */
-  function startQuiz() {
+  function startQuiz(mode) {
+    if (typeof mode === "string") {
+      state.mode = mode;
+      store("gacha_mode", mode);
+    }
     state.answers = [];
     state.idx = 0;
     state.result = null;
@@ -174,11 +190,12 @@
   }
 
   function renderQuiz(i) {
-    var q = QS[i];
+    var set = qset();
+    var q = set[i];
     if (!q) return navigate("#/");
     state.idx = i;
-    $("#q-index").textContent = "0" + (i + 1) + " / 0" + QS.length;
-    $("#q-bar").style.width = ((i + 1) / QS.length) * 100 + "%";
+    $("#q-index").textContent = "0" + (i + 1) + " / 0" + set.length;
+    $("#q-bar").style.width = ((i + 1) / set.length) * 100 + "%";
     $("#q-text").textContent = q.q;
     $("#q-hint").textContent = q.hint;
 
@@ -216,7 +233,7 @@
     var next = state.idx + 1;
     setTimeout(function () {
       state.locking = false;
-      if (next < QS.length) navigate("#/q" + (next + 1));
+      if (next < qset().length) navigate("#/q" + (next + 1));
       else beginReading();
     }, reduced() ? 60 : 260);
   }
@@ -271,12 +288,13 @@
   /* -------------------- 结果页 -------------------- */
   function whyLine(r) {
     var count = 0;
+    var total = qset().length;
     state.answers.forEach(function (a) {
       if (a && (a.primary === r.id || a.secondary === r.id)) count++;
     });
     var t = BY_ID[r.id];
-    if (count >= 3) return "3 道题里有 " + count + " 次，你都选了和「" + t.core + "」有关的答案。";
-    return "3 道题里有 " + count + " 次，你选了和「" + t.core + "」有关的答案；再加上隐藏面 " +
+    if (count >= total) return total + " 道题里，你次次都选了和「" + t.core + "」有关的答案。";
+    return total + " 道题里有 " + count + " 次，你选了和「" + t.core + "」有关的答案；再加上隐藏面 " +
       BY_ID[r.hidden].code + " 号，就成了这张卡。";
   }
 
@@ -319,13 +337,16 @@
       saveResult();
     }
     $("#card-wrap").innerHTML = cardHTML(t, r);
-    $("#result-eyebrow").textContent = "YOU GOT ／ NO." + t.code;
+    $("#result-eyebrow").textContent = "YOU GOT ／ NO." + t.code +
+      (state.mode === "full" ? " ／ 9 题精测" : "");
     $("#result-title").innerHTML = "你是 " + t.code + " 号";
     $("#result-sub").textContent = t.name + " · " + t.nick + " · 隐藏面 " + BY_ID[r.hidden].code + " 号";
     $("#result-why").textContent = whyLine(r);
     $("#btn-unlock").innerHTML = state.unlocked
       ? "查看深度解读 <span class=\"price\">已解锁</span>"
       : "解锁深度解读 <span class=\"price\">¥9.9</span>";
+    var fullBtn = $("#btn-full");
+    if (fullBtn) fullBtn.hidden = state.mode === "full";
     $("#rate").hidden = false;
     $("#rate-opts").hidden = state.rated;
     $("#rate-done").hidden = !state.rated;
@@ -778,7 +799,7 @@
     var h = location.hash.replace(/^#\/?/, "");
     if (/^q[1-9]$/.test(h)) {
       var i = parseInt(h.slice(1), 10) - 1;
-      if (i > state.answers.length) return navigate("#/");
+      if (i > state.answers.length || i >= qset().length) return navigate("#/");
       renderQuiz(i);
       return;
     }
@@ -795,8 +816,10 @@
   }
 
   /* -------------------- 事件绑定 -------------------- */
-  $("#btn-start").addEventListener("click", startQuiz);
-  $("#btn-retry").addEventListener("click", startQuiz);
+  $("#btn-start").addEventListener("click", function () { startQuiz("quick"); });
+  $("#btn-retry").addEventListener("click", function () { startQuiz(); });
+  $("#btn-full").addEventListener("click", function () { startQuiz("full"); });
+  $("#btn-full-home").addEventListener("click", function () { startQuiz("full"); });
   $("#btn-quit").addEventListener("click", function () { navigate("#/"); });
   $("#btn-back").addEventListener("click", function () {
     if (state.idx > 0) navigate("#/q" + state.idx);

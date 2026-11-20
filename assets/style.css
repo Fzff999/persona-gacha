@@ -180,6 +180,7 @@ main {
 }
 .cta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .micro { font-size: 12.5px; color: var(--muted); }
+.home__more { display: inline-block; margin-top: 12px; padding: 4px 0; font-size: 12.5px; }
 
 .btn {
   position: relative;

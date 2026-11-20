@@ -235,6 +235,109 @@
     }
   ];
 
+  /* 9 题精测版：每型至少出现一次，覆盖更多场景 */
+  var FULL_QUESTIONS = [
+    {
+      q: "走进一个全是陌生人的房间，你先做什么？",
+      hint: "选最像你第一反应的那个，不要选“应该”的。",
+      options: [
+        { label: "先看这里谁说了算、什么规矩", primary: 6, secondary: 1 },
+        { label: "先让自己被看见、被记住", primary: 3, secondary: 7 },
+        { label: "先找到同频的人聊起来", primary: 4, secondary: 9 },
+        { label: "先照顾那个落单的人", primary: 2, secondary: 9 },
+        { label: "先找个角落，把情况摸清楚", primary: 5, secondary: 6 }
+      ]
+    },
+    {
+      q: "做决定的时候，你最怕什么？",
+      hint: "怕的那个东西，往往就是你真正的动机。",
+      options: [
+        { label: "做错，显得不够好", primary: 1, secondary: 6 },
+        { label: "错过，机会就没了", primary: 7, secondary: 3 },
+        { label: "不被理解，没人站在我这边", primary: 4, secondary: 2 },
+        { label: "失控，被人拿捏", primary: 8, secondary: 5 },
+        { label: "起冲突，关系变差", primary: 9, secondary: 2 }
+      ]
+    },
+    {
+      q: "被当众指出错误，你的第一反应是？",
+      hint: "第一反应，不是事后反思出来的那个。",
+      options: [
+        { label: "先认，回去再反复复盘", primary: 1, secondary: 6 },
+        { label: "先解释清楚，别让人误会", primary: 6, secondary: 3 },
+        { label: "表面没事，心里难受很久", primary: 4, secondary: 9 },
+        { label: "先判断他说得对不对，对就改", primary: 5, secondary: 1 },
+        { label: "有点火，想把话说清楚", primary: 8, secondary: 7 }
+      ]
+    },
+    {
+      q: "朋友遇到麻烦，你通常会？",
+      hint: "",
+      options: [
+        { label: "直接给方案，帮他分析", primary: 5, secondary: 1 },
+        { label: "先陪着，问他需要什么", primary: 2, secondary: 9 },
+        { label: "替他出头，把事摆平", primary: 8, secondary: 3 },
+        { label: "想办法让他先开心起来", primary: 7, secondary: 2 },
+        { label: "提醒他所有可能的风险", primary: 6, secondary: 5 }
+      ]
+    },
+    {
+      q: "压力最大的时候，你会？",
+      hint: "不是你想成为的样子，是你实际会做的事。",
+      options: [
+        { label: "加班、检查、反复修改", primary: 1, secondary: 3 },
+        { label: "消失一阵，谁也不想理", primary: 5, secondary: 4 },
+        { label: "疯狂安排，把日程塞满", primary: 7, secondary: 3 },
+        { label: "先扛住，谁也不说", primary: 8, secondary: 2 },
+        { label: "拖延、刷手机、假装没事", primary: 9, secondary: 7 }
+      ]
+    },
+    {
+      q: "你最希望别人怎么评价你？",
+      hint: "不是别人真的怎么评价，是你最想听到的那句。",
+      options: [
+        { label: "靠谱，值得托付", primary: 6, secondary: 1 },
+        { label: "温暖，会照顾人", primary: 2, secondary: 9 },
+        { label: "有本事，能扛事", primary: 3, secondary: 8 },
+        { label: "特别，有品味", primary: 4, secondary: 3 },
+        { label: "聪明，看得透", primary: 5, secondary: 1 }
+      ]
+    },
+    {
+      q: "两个朋友吵起来，你在场，你会？",
+      hint: "",
+      options: [
+        { label: "先把他们分开，别升级", primary: 8, secondary: 1 },
+        { label: "当和事佬，各退一步", primary: 9, secondary: 2 },
+        { label: "私下分别听，帮他们翻译", primary: 4, secondary: 2 },
+        { label: "讲道理，把事实摆清楚", primary: 5, secondary: 1 },
+        { label: "换个话题，先把气氛带过去", primary: 7, secondary: 6 }
+      ]
+    },
+    {
+      q: "难得的休息日，你最想？",
+      hint: "",
+      options: [
+        { label: "把拖了很久的事做完", primary: 3, secondary: 1 },
+        { label: "谁也别找我，一个人待着", primary: 5, secondary: 4 },
+        { label: "约人出去玩，越热闹越好", primary: 7, secondary: 3 },
+        { label: "陪家人朋友，照顾他们", primary: 2, secondary: 9 },
+        { label: "睡到自然醒，什么都不安排", primary: 9, secondary: 5 }
+      ]
+    },
+    {
+      q: "你最怕听到哪句话？",
+      hint: "哪一句会让你心里“咯噔”一下。",
+      options: [
+        { label: "“你怎么连这个都做不好”", primary: 1, secondary: 3 },
+        { label: "“你太自私了”", primary: 2, secondary: 9 },
+        { label: "“你不行”", primary: 3, secondary: 8 },
+        { label: "“没人真的懂你”", primary: 4, secondary: 6 },
+        { label: "“随便你吧”", primary: 9, secondary: 8 }
+      ]
+    }
+  ];
+
   /* 合盘规则：把两型的关系归成 4 类，再给一句判词 */
   var PAIR_RULES = {
     same: {
@@ -277,6 +380,7 @@
   window.GACHA_DATA = {
     types: TYPES,
     questions: QUESTIONS,
+    full: FULL_QUESTIONS,
     pairRules: PAIR_RULES,
     pairs: PAIRS
   };
